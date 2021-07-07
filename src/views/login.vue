@@ -1,6 +1,8 @@
 <template>
   <div>
     <div id="input-modular">
+      <h1>登录</h1>
+      <div id="tip"></div>
       <el-input
         v-model="inputName"
         placeholder="请输入用户名。用户名为4-20个字节，首字母必须为英文，由字母，数字，_自组成"
@@ -26,7 +28,7 @@
 
       <el-row>
         <el-button @click="gotoregister">注册</el-button>
-        <el-button @click="gotolink">登录</el-button>
+        <el-button @click="login">登录</el-button>
       </el-row>
     </div>
   </div>
@@ -70,8 +72,41 @@ export default {
       }
     },
 
-    gotolink() {
-      this.$router.replace("/login");
+    login() {
+      var name = this.inputName;
+      var key = this.inputKey;
+
+      if (name == "" || key == "") {
+        this.$alert("请填写完整信息", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+      } else if (this.messageName != "" || this.messageKey != "") {
+        this.$alert("请按格式填写相关信息", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+      } else {
+        this.$alert("登录成功", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+      }
     },
 
     gotoregister() {
