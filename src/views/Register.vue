@@ -81,7 +81,13 @@
       <el-row>
         <el-col :span="4"><div id="location">所在地:</div></el-col>
         <div>
-          <v-distpicker @change="onChangeProvince()"></v-distpicker>
+          <v-distpicker 
+          @province='onChangeProcince()'
+          @city='onChangeCity()'
+          @area='onChangeArea()'
+          ></v-distpicker>
+         
+
         </div>
       </el-row>
 
@@ -129,7 +135,10 @@ export default {
       messageMail: '', //绑定placeholder，提示用户邮箱输入
       messageConfirm: '', //绑定placeholder,提示用户确认密码
       radio: '1', //性别选择 1为男性
-      messageprovince: '',
+      messageprovince: '0',
+      messagecity:'0',
+      messagearea:'0',
+      
 
       pickerOptions: {
         disabledDate(time) {
@@ -206,8 +215,19 @@ export default {
       }
     },
 
-    onChangeProcince() {
-      this.messageprovince = 'true';
+    onChangeProcince(a) {
+      console.log(a)
+      this.messageprovince='1'
+    },
+
+     onChangeCity(a) {
+      console.log(a)
+      this.messagecity='1'
+    },
+
+     onChangeArea(a) {
+      console.log(a)
+      this.messagearea='1'
     },
 
     onMailChange() {
@@ -233,6 +253,9 @@ export default {
       var kconfirm = this.inputConfirm;
       var mail = this.inputMail;
       var date = this.birth;
+      
+      //var city = locate.city;
+     
 
       if (
         name == '' ||
@@ -241,7 +264,10 @@ export default {
         kconfirm == '' ||
         mail == '' ||
         date == '' ||
-        this.messageprovince !== ''
+        this.messageprovince == '0'||
+        this.messagecity=='0'||
+        this.messagearea=='0'
+        
       ) {
         this.$alert('请填写完整注册相关信息', {
           confirmButtonText: "确定",
