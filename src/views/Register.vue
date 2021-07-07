@@ -236,6 +236,7 @@ export default {
       );
       if (regula.test(this.inputMail)) {
         //合法
+        this.messageMail='';
       } else {
         console.log('不合法');
         this.messageMail = '请输入正确的邮箱格式';
