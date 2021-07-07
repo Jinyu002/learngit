@@ -4,15 +4,16 @@
       <h1>注册</h1>
       <div id="tip"></div>
 
+  
       <el-input
         v-model="inputName"
         placeholder='请输入用户名。用户名为4-20个字节，首字母必须为英文，由字母，数字，_组成'
         prefix-icon="el-icon-edit"
         minlength="4"
         maxlength="20"
-        @change="onNameChange()"
-        >用户名</el-input
-      >
+        @change="checkName()"
+        >用户名</el-input>
+
       <!-- <div v-if="this.messageName.length!=0">ggghgugfcf</div> -->
       <div id="tip">{{ this.messageName }}</div>
 
@@ -22,7 +23,7 @@
         prefix-icon="el-icon-edit"
         minlength="4"
         maxlength="20"
-        @change="onNicknameChange()"
+        @change="checkNickname()"
         >昵称</el-input
       >
       <div id="tip">{{ this.messageNick }}</div>
@@ -33,7 +34,7 @@
         prefix-icon="el-icon-edit"
         minlength="6"
         maxlength="27"
-        @change="onKeyChange()"
+        @change="checkKey()"
         >密码</el-input
       >
       <div id="tip">{{ this.messageKey }}</div>
@@ -44,7 +45,7 @@
         prefix-icon="el-icon-edit"
         minlength="6"
         maxlength="27"
-        @change="onConfirmChange()"
+        @change="checkConfirm()"
         >确认密码</el-input
       >
       <div id="tip">{{ this.messageConfirm }}</div>
@@ -80,15 +81,15 @@
 
       <el-row>
         <el-col :span="4"><div id="location">所在地:</div></el-col>
-        <div>
+        <el-col :span='4'>
+        <div id='description'>
           <v-distpicker 
-          @province='onChangeProcince()'
-          @city='onChangeCity()'
-          @area='onChangeArea()'
+          @province='checkProcince()'
+          @city='checkCity()'
+          @area='checkArea()'
           ></v-distpicker>
-         
-
         </div>
+        </el-col>
       </el-row>
 
       <div id="tip"></div>
@@ -97,7 +98,7 @@
         v-model="inputMail"
         placeholder='请输入邮箱。'
         prefix-icon="el-icon-edit"
-        @change="onMailChange()"
+        @change="checkMail()"
         >邮箱</el-input
       >
       <!-- <div v-if="this.messageName.length!=0">ggghgugfcf</div> -->
@@ -150,7 +151,7 @@ export default {
   },
   components: {},
   methods: {
-    onNameChange() {
+    checkName() {
       //焦点消失 判断用户名输入值
       var regula = new RegExp("^[a-zA-Z][a-zA-Z0-9_]{3,19}");
       if (regula.test(this.inputName)) {
@@ -165,7 +166,7 @@ export default {
       }
     },
 
-    onNicknameChange() {
+    checkNickname() {
       var nick = this.inputNick;
       var name = this.inputName;
       if (nick === '') {
@@ -180,7 +181,7 @@ export default {
       }
     },
 
-    onKeyChange() {
+    checkKey() {
       var key = this.inputKey;
       var confirm = this.inputConfirm;
       if (key === '') {
@@ -204,7 +205,7 @@ export default {
       }
     },
 
-    onConfirmChange() {
+    checkConfirm() {
       var key = this.inputKey;
       var confirm = this.inputConfirm;
       if (confirm != key) {
@@ -215,22 +216,22 @@ export default {
       }
     },
 
-    onChangeProcince(a) {
+    checkProcince(a) {
       console.log(a)
       this.messageprovince='1'
     },
 
-     onChangeCity(a) {
+     checkCity(a) {
       console.log(a)
       this.messagecity='1'
     },
 
-     onChangeArea(a) {
+     checkArea(a) {
       console.log(a)
       this.messagearea='1'
     },
 
-    onMailChange() {
+   checkMail() {
       var regula = new RegExp(
         "^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$"
       );
@@ -248,26 +249,26 @@ export default {
     },
 
     registerconfirm() {
-      var name = this.inputName;
-      var nick = this.inputNick;
-      var key = this.inputKey;
-      var kconfirm = this.inputConfirm;
-      var mail = this.inputMail;
-      var date = this.birth;
+      // var name = this.inputName;
+      // var nick = this.inputNick;
+      // var key = this.inputKey;
+      // var kconfirm = this.inputConfirm;
+      // var mail = this.inputMail;
+       var date = this.birth;
       
       //var city = locate.city;
      
 
       if (
-        name == '' ||
-        nick == '' ||
-        key == '' ||
-        kconfirm == '' ||
-        mail == '' ||
+        !this.checkName() ||
+        !this.checkNickname() ||
+        !this.checkKey() ||
+        !this.checkConfirm() ||
+        !this.checkMail ||
         date == '' ||
-        this.messageprovince == '0'||
-        this.messagecity=='0'||
-        this.messagearea=='0'
+        !this.checkProcince() ||
+        !this.checkCity() ||
+        !this.checkArea()
         
       ) {
         this.$alert('请填写完整注册相关信息', {
@@ -280,11 +281,11 @@ export default {
           },
         });
       } else if (
-        this.messageName != '' ||
-        this.messageNick != '' ||
-        this.messageKey != '' ||
-        this.messageConfirm != '' ||
-        this.messageMail != ''
+        !this.checkName() ||
+        !this.checkNickname() ||
+        !this.checkKey() ||
+        !this.checkConfirm() ||
+        !this.checkMail()
       ) {
         this.$alert('请按格式填写注册相关信息', {
           confirmButtonText: '确定',
@@ -330,7 +331,7 @@ export default {
 
 #input-modular {
   position: absolute;
-  left: 200px;
+  left: 600px;
 }
 
 #tip {
@@ -346,7 +347,7 @@ export default {
 }
 #description {
   display: inline-block;
-  width: 100px;
+  width: 500px;
   color: red;
 }
 </style>
