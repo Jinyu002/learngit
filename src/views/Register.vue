@@ -84,9 +84,9 @@
         <el-col :span='4'>
         <div id='description'>
           <v-distpicker 
-          @province='checkProcince()'
-          @city='checkCity()'
-          @area='checkArea()'
+          @province='checkProcince'
+          @city='checkCity'
+          @area='checkArea'
           ></v-distpicker>
         </div>
         </el-col>
@@ -118,6 +118,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "menu1Demo",
 
@@ -137,8 +138,11 @@ export default {
       messageConfirm: '', //绑定placeholder,提示用户确认密码
       radio: '1', //性别选择 1为男性
       messageprovince: '0',
-      messagecity:'0',
+      messagecity: '0',
       messagearea:'0',
+      province:'',
+      city:'',
+      area:'',
       
 
       pickerOptions: {
@@ -218,16 +222,20 @@ export default {
 
     checkProcince(a) {
       console.log(a)
+      this.province=a.value
       this.messageprovince='1'
+      
     },
 
      checkCity(a) {
       console.log(a)
+      this.city=a.value
       this.messagecity='1'
     },
 
      checkArea(a) {
       console.log(a)
+      this.area=a.value
       this.messagearea='1'
     },
 
@@ -241,6 +249,7 @@ export default {
       } else {
         console.log('不合法');
         this.messageMail = '请输入正确的邮箱格式';
+        return false;
       }
     },
 
@@ -249,28 +258,37 @@ export default {
     },
 
     registerconfirm() {
-      // var name = this.inputName;
-      // var nick = this.inputNick;
-      // var key = this.inputKey;
-      // var kconfirm = this.inputConfirm;
-      // var mail = this.inputMail;
-       var date = this.birth;
+      var name = this.inputName;
+      var nick = this.inputNick;
+      var key = this.inputKey;
+      var kconfirm = this.inputConfirm;
+      var mail = this.inputMail;
+      var date = this.birth;
       
       //var city = locate.city;
      
 
       if (
-        !this.checkName() ||
-        !this.checkNickname() ||
-        !this.checkKey() ||
-        !this.checkConfirm() ||
-        !this.checkMail ||
+        // !this.checkName() ||
+        // !this.checkNickname() ||
+        // !this.checkKey() ||
+        // !this.checkConfirm() ||
+        // !this.checkMail ||
+        name=='' ||
+        nick=='' ||
+        key=='' ||
+        kconfirm=='' ||
+        mail=='' ||
         date == '' ||
-        !this.checkProcince() ||
-        !this.checkCity() ||
-        !this.checkArea()
+        this.messageprovince=='0' ||
+        this.messagecity=='0' ||
+        this.messagearea=='0'
         
-      ) {
+        //  !this.checkProcince() ||
+        //  !this.checkCity() ||
+        //  !this.checkArea()
+        
+       ) {
         this.$alert('请填写完整注册相关信息', {
           confirmButtonText: "确定",
           callback: (action) => {
@@ -281,11 +299,16 @@ export default {
           },
         });
       } else if (
-        !this.checkName() ||
-        !this.checkNickname() ||
-        !this.checkKey() ||
-        !this.checkConfirm() ||
-        !this.checkMail()
+        // this.checkName() ||
+        // this.checkNickname() ||
+        // this.checkKey() ||
+        // this.checkConfirm() ||
+        // this.checkMail()
+        this.messageName!='' ||
+        this.messageNick!='' ||
+        this.messageKey!='' ||
+        this.messageConfirm!='' ||
+        this.messageMail!=''
       ) {
         this.$alert('请按格式填写注册相关信息', {
           confirmButtonText: '确定',
@@ -297,8 +320,28 @@ export default {
           },
         });
       } else {
-        this.$alert('注册成功', {
-          confirmButtonText: '确定',
+        axios.post('http://localhost:63342/Login/register.php?_ijt=k162tld4qes9hnk7di56oh8s4v',{
+          //method:'post',
+          username:this.inputName,
+          password:this.inputKey,
+          nickname:this.inputNick,
+          email:this.inputMail,
+          birthday:this.birth,
+          sex:this.radio,
+          province:this.province,
+          city:this.city,
+          area:this.area,
+          
+        })
+        .then(response=>{
+          let res = response.data;
+          console.log(res.status);
+          if(res.status=='1'){
+            console.log('注册成功');
+            this.errortip=true;
+            this.errortip='注册成功';
+            this.$alert("注册成功", {
+          confirmButtonText: "确定",
           callback: (action) => {
             this.$message({
               type: "info",
@@ -306,6 +349,22 @@ export default {
             });
           },
         });
+          }else{
+            console.log(res);
+            console.log('注册失败，用户名已存在');
+            this.errortip=true;
+            this.errortip='注册失败';
+            this.$alert("注册失败，用户已存在", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+          }
+        })
       }
     },
   },

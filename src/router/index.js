@@ -2,6 +2,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VDistpicker from 'v-distpicker'
+import axios from 'axios'
+
+new Vue({
+    axios
+})
 Vue.component('v-distpicker',VDistpicker)
 
 Vue.use(VueRouter)

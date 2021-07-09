@@ -1,3 +1,4 @@
+<head></head>
 <template>
   <div>
     <div id="input-modular">
@@ -9,7 +10,7 @@
         prefix-icon="el-icon-search"
         minlength="4"
         maxlength="20"
-        @change="onNameChange()"
+        @change="checkName()"
         >用户名</el-input
       >
       <!-- <div v-if="this.messageName.length!=0">ggghgugfcf</div> -->
@@ -21,7 +22,7 @@
         prefix-icon="el-icon-search"
         minlength="6"
         maxlength="27"
-        @change="onKeyChange()"
+        @change="checkKey()"
         >密码</el-input
       >
       <div id="tip">{{ this.messageKey }}</div>
@@ -34,49 +35,54 @@
   </div>
 </template>
 
+
 <script>
+ import axios from 'axios';
 export default {
   name: "menu1Demo",
   data() {
     return {
-      inputName: "", //绑定输入用户名
-
-      inputKey: "", //绑定输入密码
+      inputName: '', //绑定输入用户名
+      inputKey: '', //绑定输入密码
+      messageName: '',
+      messageKey: '',
     };
   },
   components: {},
   methods: {
-    onNameChange() {
+    checkName() {
       //焦点消失 判断用户名输入值
       var regula = new RegExp("^[a-zA-Z][a-zA-Z0-9_]{3,19}");
-      if (regula.test(this.inputName)) {
+      if (!regula.test(this.inputName)) {
         //合法
-        this.messageName = "";
+        console.log("不合法");
+        this.messageName =
+          '!请输入4-20字符，首字母为英文，由字母、数字、下划线组成';
+        // this.messageName ='';
       } else {
         //不合法
-        console.log("不合法");
+        // console.log("不合法");
         //不合法红色警告符
-        this.messageName =
-          "!请输入4-20字符，首字母为英文，由字母、数字、下划线组成";
+        // this.messageName =
+        //   "!请输入4-20字符，首字母为英文，由字母、数字、下划线组成";
+        this.messageName ='';
       }
     },
 
-    onKeyChange() {
+    checkKey() {
       var key = this.inputKey;
 
-      if (key === "") {
+      if (key == '') {
         console.log("不合法");
         this.messageKey = "!请输入密码";
       } else {
         this.messageKey = "";
       }
     },
-
-    login() {
-      var name = this.inputName;
-      var key = this.inputKey;
-
-      if (name == "" || key == "") {
+    login(){
+      var name=this.inputName;
+      var key=this.inputKey;
+      if(name==''||key==''){
         this.$alert("请填写完整信息", {
           confirmButtonText: "确定",
           callback: (action) => {
@@ -86,8 +92,8 @@ export default {
             });
           },
         });
-      } else if (this.messageName != "" || this.messageKey != "") {
-        this.$alert("请按格式填写相关信息", {
+      }else if(this.messageName!=''||this.messageKey!=''){
+        this.$alert("请按格式填写信息", {
           confirmButtonText: "确定",
           callback: (action) => {
             this.$message({
@@ -96,8 +102,29 @@ export default {
             });
           },
         });
-      } else {
-        this.$alert("登录成功", {
+      }else {
+        // this.$alert("登陆成功", {
+        //   confirmButtonText: "确定",
+        //   callback: (action) => {
+        //     this.$message({
+        //       type: "info",
+        //       message: `action: ${action}`,
+        //     });
+        //   },
+        // });
+        axios.post('http://localhost:63342/Login/login.php?_ijt=koic5lvbvbkerk0hju1h5dve99',{
+          //method:'post',
+          username:this.inputName,
+          password:this.inputKey,
+          
+        }).then(response=>{
+          let res = response.data;
+          console.log(res.status);
+          if(res.status=='1'){
+            console.log('登陆成功');
+            this.errortip=true;
+            this.errortip='登陆成功';
+            this.$alert("登录成功", {
           confirmButtonText: "确定",
           callback: (action) => {
             this.$message({
@@ -106,8 +133,26 @@ export default {
             });
           },
         });
+          }else{
+            console.log(res);
+            console.log('登陆失败');
+            this.errortip=true;
+            this.errortip='登陆失败';
+            this.$alert("用户名或密码错误", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+          }
+        })
       }
     },
+
+    
 
     gotoregister() {
       this.$router.replace("/Register");
@@ -122,7 +167,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style  scoped>
 >>> div.el-input {
   width: 350px;
   display: block;
