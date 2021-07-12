@@ -3,7 +3,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VDistpicker from 'v-distpicker'
 import axios from 'axios'
-import cookie from '../util/cookie'//引入cookie.js
+import cookie from '../util/cookie'
+//引入cookie.js
 
 new Vue({
     axios
@@ -51,10 +52,10 @@ router.beforeEach((to,from,next) => {
     if(to.matched.length===0){
         next('/404')
     }
-    if(cookie.getCookie("Loginname")){
+    if(cookie.getCookie("LoginName")){
         next()
     }else{
-        if(to.path==="/login"){
+        if(to.path==="/login"||to.path==="/Register"){
             next()
         }else{
             next('/login')
@@ -62,5 +63,7 @@ router.beforeEach((to,from,next) => {
     }
 
 })
+
+
 
 export default router

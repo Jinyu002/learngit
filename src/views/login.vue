@@ -38,15 +38,15 @@
 
 
 <script>
- import axios from 'axios';
+import axios from "axios";
 export default {
   name: "menu1Demo",
   data() {
     return {
-      inputName: '', //绑定输入用户名
-      inputKey: '', //绑定输入密码
-      messageName: '',
-      messageKey: '',
+      inputName: "", //绑定输入用户名
+      inputKey: "", //绑定输入密码
+      messageName: "",
+      messageKey: "",
     };
   },
   components: {},
@@ -58,7 +58,8 @@ export default {
         //合法
         console.log("不合法");
         this.messageName =
-          '!请输入4-20字符，首字母为英文，由字母、数字、下划线组成';
+          "!请输入4-20字符，首字母为英文，由字母、数字、下划线组成";
+        return false;
         // this.messageName ='';
       } else {
         //不合法
@@ -66,24 +67,27 @@ export default {
         //不合法红色警告符
         // this.messageName =
         //   "!请输入4-20字符，首字母为英文，由字母、数字、下划线组成";
-        this.messageName ='';
+        this.messageName = "";
+        return true;
       }
     },
 
     checkKey() {
       var key = this.inputKey;
 
-      if (key == '') {
+      if (key == "") {
         console.log("不合法");
         this.messageKey = "!请输入密码";
+        return false;
       } else {
         this.messageKey = "";
+        return true;
       }
     },
-    login(){
-      var name=this.inputName;
-      var key=this.inputKey;
-      if(name==''||key==''){
+    login() {
+      var name = this.inputName;
+      var key = this.inputKey;
+      if (name == "" || key == "") {
         this.$alert("请填写完整信息", {
           confirmButtonText: "确定",
           callback: (action) => {
@@ -93,7 +97,7 @@ export default {
             });
           },
         });
-      }else if(this.messageName!=''||this.messageKey!=''){
+      } else if (!this.checkName() || !this.checkKey()) {
         this.$alert("请按格式填写信息", {
           confirmButtonText: "确定",
           callback: (action) => {
@@ -103,56 +107,70 @@ export default {
             });
           },
         });
-      }else {
-        
-        axios.post('http://localhost:63342/Login/login.php?_ijt=koic5lvbvbkerk0hju1h5dve99',{
-          //method:'post',
-          username:this.inputName,
-          password:this.inputKey,
-          
-        }).then(response=>{
-          let res = response.data;
-          console.log(res.status);
-          if(res.status=='1'){
-            let loginInfo={
-              LoginName:this.inputName
+      } else {
+        axios
+          .post(
+            "http://localhost:63342/Login/login.php?_ijt=koic5lvbvbkerk0hju1h5dve99",
+            {
+              //method:'post',
+              username: this.inputName,
+              password: this.inputKey,
             }
-            this.cookie.setCookie(loginInfo,7)
-            console.log('登陆成功');
-            this.errortip=true;
-            this.errortip='登陆成功';
-            this.$alert("登录成功", {
-          confirmButtonText: "确定",
-          callback: (action) => {
-            this.$message({
-              type: "info",
-              message: `action: ${action}`,
-            });
-            this.$router.replace("/Hello");
-          },
-          
-        });
-        //this.$router.replace("/Register");
-          }else{
-            console.log(res);
-            console.log('登陆失败');
-            this.errortip=true;
-            this.errortip='登陆失败';
-            this.$alert("用户名或密码错误", {
-          confirmButtonText: "确定",
-          callback: (action) => {
-            this.$message({
-              type: "info",
-              message: `action: ${action}`,
-            });
-          },
-        });
-          }
-        })
+          )
+          .then((response) => {
+            let res = response.data;
+            console.log(res.status);
+            if (res.status == "1") {
+              let loginInfo = {
+                LoginName: this.inputName,
+              };
+              this.cookie.setCookie(loginInfo, 7);
+              console.log("登陆成功");
+              this.errortip = true;
+              this.errortip = "登陆成功";
+              this.$alert("登录成功", {
+                confirmButtonText: "确定",
+                callback: (action) => {
+                  this.$message({
+                    type: "info",
+                    message: `action: ${action}`,
+                  });
+                  this.$router.push("/Hello");
+                },
+              });
+              //this.$router.replace("/Register");
+            } else if (res.status == "0") {
+              console.log(res);
+              console.log("登陆失败");
+              this.errortip = true;
+              this.errortip = "登陆失败";
+              this.$alert("用户名或密码错误", {
+                confirmButtonText: "确定",
+                callback: (action) => {
+                  this.$message({
+                    type: "info",
+                    message: `action: ${action}`,
+                  });
+                },
+              });
+            } else {
+              console.log(res);
+              console.log("登陆失败");
+              this.errortip = true;
+              this.errortip = "登陆失败";
+              this.$alert("后台数据校验不通过，请按格式填写", {
+                confirmButtonText: "确定",
+                callback: (action) => {
+                  this.$message({
+                    type: "info",
+                    message: `action: ${action}`,
+                  });
+                },
+              });
+            }
+          });
       }
     },
-
-    
 
     gotoregister() {
       this.$router.replace("/Register");
