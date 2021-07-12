@@ -115,7 +115,8 @@ export default {
               //method:'post',
               username: this.inputName,
               password: this.inputKey,
-            }
+            },
+            { emulateJSON: true }
           )
           .then((response) => {
             let res = response.data;

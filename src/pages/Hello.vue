@@ -34,6 +34,7 @@ export default {
   methods: {
     
     gotologin() {
+      this.$http.post("http://localhost:63342/Login/logout.php?_ijt=ra23q9aabitr7t5mig83rkkhvl",)
       //删除cookie
       this.cookie.clearCookie("LoginName");
       this.$router.replace("/login");

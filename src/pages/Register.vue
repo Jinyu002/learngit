@@ -326,6 +326,7 @@ export default {
           },
         });
       } else {
+        console.log(this.birth)
         // axios.post
         this.$http.post(
             "http://localhost:63342/Login/register.php?_ijt=ees13i9k5fr2jk581r95tesd7q",
@@ -341,7 +342,8 @@ export default {
               province: this.province,
               city: this.city,
               area: this.area,
-            }
+            },
+            { emulateJSON: true }
           )
           .then((response) => {
             let res = response.data;
