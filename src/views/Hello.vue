@@ -24,6 +24,9 @@ export default {
         loginname:"" 
     };
   },
+  
+ 
+
   mounted(){
       this.loginname = this.cookie.getCookie("LoginName");
   },

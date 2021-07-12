@@ -3,6 +3,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import VDistpicker from 'v-distpicker'
 import axios from 'axios'
+import cookie from '../util/cookie'//引入cookie.js
 
 new Vue({
     axios
@@ -14,7 +15,7 @@ Vue.use(VueRouter)
 const routes = [{
         path: '/',
         name: 'Default',
-        redirect: '/register',
+        redirect: '/login',
     },
     {
         path: '/register',
@@ -44,6 +45,22 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
+})
+
+router.beforeEach((to,from,next) => {
+    if(to.matched.length===0){
+        next('/404')
+    }
+    if(cookie.getCookie("Loginname")){
+        next()
+    }else{
+        if(to.path==="/login"){
+            next()
+        }else{
+            next('/login')
+        }
+    }
+
 })
 
 export default router
