@@ -103,15 +103,7 @@ export default {
           },
         });
       }else {
-        // this.$alert("登陆成功", {
-        //   confirmButtonText: "确定",
-        //   callback: (action) => {
-        //     this.$message({
-        //       type: "info",
-        //       message: `action: ${action}`,
-        //     });
-        //   },
-        // });
+        
         axios.post('http://localhost:63342/Login/login.php?_ijt=koic5lvbvbkerk0hju1h5dve99',{
           //method:'post',
           username:this.inputName,
@@ -121,6 +113,10 @@ export default {
           let res = response.data;
           console.log(res.status);
           if(res.status=='1'){
+            let loginInfo={
+              LoginName:this.inputName
+            }
+            this.cookie.setCookie(loginInfo,7)
             console.log('登陆成功');
             this.errortip=true;
             this.errortip='登陆成功';
@@ -131,8 +127,11 @@ export default {
               type: "info",
               message: `action: ${action}`,
             });
+            this.$router.replace("/Hello");
           },
+          
         });
+        //this.$router.replace("/Register");
           }else{
             console.log(res);
             console.log('登陆失败');
@@ -180,7 +179,7 @@ export default {
 
 #input-modular {
   position: absolute;
-  left: 200px;
+  left: 600px;
 }
 
 #tip {

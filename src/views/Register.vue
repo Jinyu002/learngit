@@ -264,6 +264,11 @@ export default {
       var kconfirm = this.inputConfirm;
       var mail = this.inputMail;
       var date = this.birth;
+      // var testdate = new this.birth();
+      // var dateobj_toLocaleDataString = testdate.toLocaleDataString();
+      // console.log(dateobj_toLocaleDataString);
+       
+      console.log(date);
       
       //var city = locate.city;
      
@@ -349,7 +354,7 @@ export default {
             });
           },
         });
-          }else{
+          }else if(res.status=='0'){
             console.log(res);
             console.log('注册失败，用户名已存在');
             this.errortip=true;
@@ -363,6 +368,35 @@ export default {
             });
           },
         });
+          }else if(res.status=='2'){
+            console.log(res);
+            console.log('数据后台校验未通过');
+            this.errortip=true;
+            this.errortip='注册失败';
+            this.$alert("数据后台校验未通过，注册失败", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+          }else{
+            console.log(res);
+            console.log('数据库未连接');
+            this.errortip=true;
+            this.errortip='注册失败';
+            this.$alert("数据库未连接，注册失败", {
+          confirmButtonText: "确定",
+          callback: (action) => {
+            this.$message({
+              type: "info",
+              message: `action: ${action}`,
+            });
+          },
+        });
+
           }
         })
       }
