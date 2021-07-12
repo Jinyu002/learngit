@@ -18,6 +18,7 @@
 
       <el-input
         v-model="inputKey"
+        show-password
         placeholder="请输入密码。密码为6-27个字符"
         prefix-icon="el-icon-search"
         minlength="6"

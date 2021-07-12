@@ -30,6 +30,7 @@
 
       <el-input
         v-model="inputKey"
+        show-password
         placeholder='请输入密码。密码为6-27个字符'
         prefix-icon="el-icon-edit"
         minlength="6"
@@ -41,6 +42,7 @@
 
       <el-input
         v-model="inputConfirm"
+        show-password
         placeholder="请确认密码"
         prefix-icon="el-icon-edit"
         minlength="6"
