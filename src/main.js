@@ -6,7 +6,8 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import cookie from './util/cookie'
 Vue.prototype.cookie = cookie;
-
+import VueResource from 'vue-resource'
+Vue.use(VueResource);
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

@@ -25,7 +25,7 @@ const routes = [{
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import ('../views/Register.vue'),
+            import ('../pages/Register.vue'),
     },{
         path: '/login',
         name: 'Login',
@@ -33,12 +33,12 @@ const routes = [{
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () =>
-            import ('../views/login.vue'),
+            import ('../pages/login.vue'),
     },{
         path: '/hello',
         name: 'Hello',
         component: () =>
-        import('../views/Hello.vue'),
+        import('../pages/Hello.vue'),
     },
 ]
 
@@ -52,10 +52,13 @@ router.beforeEach((to,from,next) => {
     if(to.matched.length===0){
         next('/404')
     }
-    if(cookie.getCookie("LoginName")){
-        next()
+    if(cookie.getCookie("LoginName")){if(to.path==="/login"){
+        next('/Hello')
     }else{
-        if(to.path==="/login"||to.path==="/Register"){
+        next()
+    }
+}else{
+        if(to.path==="/Register"||to.path==="/login"){
             next()
         }else{
             next('/login')
