@@ -73,6 +73,7 @@
               type="date"
               placeholder="选择日期"
               :picker-options="pickerOptions"
+              
             >
             </el-date-picker>
           </el-col>
@@ -145,7 +146,8 @@ export default {
       province: "",
       city: "",
       area: "",
-
+     
+//只能选择之前的日期作为生日
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now() - 8.64e7;
@@ -228,6 +230,20 @@ export default {
       }
     },
 
+    // ruledate(dateData){
+    //   console.log(dateData);
+    //   let date = new Date(dateData)
+    //   let y = date.getFullYear()
+    //   let m =date.getMonth()
+    //   m = m<10?('0'+m):m
+    //   let d = date.getDate()
+    //   d=d<10?('0'+d):d
+    //   const time = y + '-'+ m + '-' + d;
+    //   this.birth = time;
+    //   return this.birth;
+
+    // },
+
     checkProcince(a) {
       console.log(a);
       this.province = a.value;
@@ -266,19 +282,25 @@ export default {
     },
 
     registerconfirm() {
+      console.log(this.birth)
       var name = this.inputName;
       var nick = this.inputNick;
       var key = this.inputKey;
       var kconfirm = this.inputConfirm;
       var mail = this.inputMail;
-      var date = this.birth;
-      // var testdate = new this.birth();
-      // var dateobj_toLocaleDataString = testdate.toLocaleDataString();
-      // console.log(dateobj_toLocaleDataString);
+      var date = this.birth
+      var d =new Date(date)
+      var y = d.getFullYear()
+      var m =d.getMonth()+1
+      m = m<10?('0' +m):m
+      var day = d.getDate()
+      day = day<10?('0'+day) :day
+      const time = y+'-'+m+'-'+day
+      console.log(y)
+      console.log(m)
+      console.log(day)
+      console.log(time)
 
-      console.log(date);
-
-      //var city = locate.city;
 
       if (
         // !this.checkName() ||
@@ -291,7 +313,7 @@ export default {
         key == "" ||
         kconfirm == "" ||
         mail == "" ||
-        date == "" ||
+        time == "" ||
         this.messageprovince == "0" ||
         this.messagecity == "0" ||
         this.messagearea == "0"
@@ -326,10 +348,11 @@ export default {
           },
         });
       } else {
-        console.log(this.birth)
+        
+        
         // axios.post
         this.$http.post(
-            "http://localhost:63342/Login/register.php?_ijt=ees13i9k5fr2jk581r95tesd7q",
+            "http://localhost/ci-test/public/index.php/Register/register",
             {
               //method:'post',
               username: this.inputName,
@@ -337,12 +360,13 @@ export default {
               confirm: this.inputConfirm,
               nickname: this.inputNick,
               email: this.inputMail,
-              birthday: this.birth,
+              birthday: time,
               sex: this.radio,
               province: this.province,
               city: this.city,
               area: this.area,
             },
+            
             { emulateJSON: true }
           )
           .then((response) => {

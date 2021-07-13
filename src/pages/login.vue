@@ -110,7 +110,7 @@ export default {
       } else {
         // axios.post
         this.$http.post(
-            "http://localhost:63342/Login/login.php?_ijt=koic5lvbvbkerk0hju1h5dve99",
+            "http://localhost/ci-test/public/index.php/Login/login",
             {
               //method:'post',
               username: this.inputName,
