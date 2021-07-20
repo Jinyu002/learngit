@@ -31,6 +31,7 @@
       <el-row>
         <el-button @click="gotoregister">注册</el-button>
         <el-button @click="login">登录</el-button>
+        <el-button @click="tourists">游客登录</el-button>
       </el-row>
     </div>
   </div>
@@ -109,8 +110,9 @@ export default {
         });
       } else {
         // axios.post
-        this.$http.post(
-            "http://localhost/ci-test/public/index.php/Login/login",
+        this.$http
+          .post(
+            "http://localhost/ci-test/public/index.php/Users/login",
             {
               //method:'post',
               username: this.inputName,
@@ -121,7 +123,25 @@ export default {
           .then((response) => {
             let res = response.data;
             console.log(res.status);
-            if (res.status == "1") {
+            if (res.status == "5") {
+              let loginInfo = {
+                LoginName: this.inputName,
+              };
+              this.cookie.setCookie(loginInfo, 7);
+              console.log("登陆成功");
+              this.errortip = true;
+              this.errortip = "登陆成功";
+              this.$alert("登录成功", {
+                confirmButtonText: "确定",
+                callback: (action) => {
+                  this.$message({
+                    type: "info",
+                    message: `action: ${action}`,
+                  });
+                  this.$router.push("/Administrator");
+                },
+              });
+            } else if (res.status == "1") {
               let loginInfo = {
                 LoginName: this.inputName,
               };
@@ -139,12 +159,6 @@ export default {
                   this.$router.push("/Hello");
                 },
               });
-          //     axios
-          // .get(
-          //   "http://localhost:63342/Login/login.php?_ijt=koic5lvbvbkerk0hju1h5dve99",
-          //   {
-
-          //   })
             } else {
               console.log(res);
               console.log("登陆失败");
@@ -159,13 +173,17 @@ export default {
                   });
                 },
               });
-            } 
+            }
           });
       }
     },
 
     gotoregister() {
       this.$router.replace("/Register");
+    },
+
+    tourists() {
+      this.$router.replace("/Hello");
     },
   },
   computed: {

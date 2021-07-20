@@ -73,7 +73,6 @@
               type="date"
               placeholder="选择日期"
               :picker-options="pickerOptions"
-              
             >
             </el-date-picker>
           </el-col>
@@ -146,8 +145,8 @@ export default {
       province: "",
       city: "",
       area: "",
-     
-//只能选择之前的日期作为生日
+
+      //只能选择之前的日期作为生日
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now() - 8.64e7;
@@ -282,25 +281,24 @@ export default {
     },
 
     registerconfirm() {
-      console.log(this.birth)
+      console.log(this.birth);
       var name = this.inputName;
       var nick = this.inputNick;
       var key = this.inputKey;
       var kconfirm = this.inputConfirm;
       var mail = this.inputMail;
-      var date = this.birth
-      var d =new Date(date)
-      var y = d.getFullYear()
-      var m =d.getMonth()+1
-      m = m<10?('0' +m):m
-      var day = d.getDate()
-      day = day<10?('0'+day) :day
-      const time = y+'-'+m+'-'+day
-      console.log(y)
-      console.log(m)
-      console.log(day)
-      console.log(time)
-
+      var date = this.birth;
+      var d = new Date(date);
+      var y = d.getFullYear();
+      var m = d.getMonth() + 1;
+      m = m < 10 ? "0" + m : m;
+      var day = d.getDate();
+      day = day < 10 ? "0" + day : day;
+      const time = y + "-" + m + "-" + day;
+      console.log(y);
+      console.log(m);
+      console.log(day);
+      console.log(time);
 
       if (
         // !this.checkName() ||
@@ -348,11 +346,10 @@ export default {
           },
         });
       } else {
-        
-        
         // axios.post
-        this.$http.post(
-            "http://localhost/ci-test/public/index.php/Register/register",
+        this.$http
+          .post(
+            "http://localhost/ci-test/public/index.php/Users/register",
             {
               //method:'post',
               username: this.inputName,
@@ -366,7 +363,7 @@ export default {
               city: this.city,
               area: this.area,
             },
-            
+
             { emulateJSON: true }
           )
           .then((response) => {
@@ -386,7 +383,6 @@ export default {
                 },
               });
             } else {
-              
               this.$alert(res.msg, {
                 confirmButtonText: "确定",
                 callback: (action) => {
@@ -396,7 +392,7 @@ export default {
                   });
                 },
               });
-            } 
+            }
           });
       }
     },

@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import VDistpicker from 'v-distpicker'
 import axios from 'axios'
 import cookie from '../util/cookie'
+
 //引入cookie.js
 
 new Vue({
@@ -39,7 +40,32 @@ const routes = [{
         name: 'Hello',
         component: () =>
         import('../pages/Hello.vue'),
-    },
+    },{
+        path: '/administrator',
+        name: '/Administrator',
+        component: ()=>
+        import('../pages/Administrator')
+    },{
+        path: '/post',
+        name: '/Post',
+        component: ()=>
+        import('../pages/Post')
+    },{
+        path: '/userinfo',
+        name: '/Userinfo',
+        component: ()=>
+        import('../pages/Userinfo')
+    },{
+        path: '/users',
+        name: '/Users',
+        component: ()=>
+        import('../pages/Users')
+    },{
+        path: '/addsection',
+        name: '/addSection',
+        component: ()=>
+        import('../pages/addSection')
+    }
 ]
 
 const router = new VueRouter({
@@ -52,17 +78,20 @@ router.beforeEach((to,from,next) => {
     if(to.matched.length===0){
         next('/404')
     }
-    if(cookie.getCookie("LoginName")){if(to.path==="/login"){
+    if(cookie.getCookie("LoginName")){
+        if(to.path==="/login"){
         next('/Hello')
     }else{
         next()
     }
 }else{
-        if(to.path==="/Register"||to.path==="/login"){
-            next()
-        }else{
-            next('/login')
-        }
+    next()
+        // if(to.path==="/Register"||to.path==="/login"||to.path=="/Administrator"){
+        //     next()
+        // }
+        // else{
+        //     next('/login')
+        // }
     }
 
 })
