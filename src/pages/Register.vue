@@ -380,6 +380,7 @@ export default {
                     type: "info",
                     message: `action: ${action}`,
                   });
+                  this.$router.replace("/login");
                 },
               });
             } else {

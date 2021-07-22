@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container style="height: 500px; border: 1px solid #eee">
+    <el-container style="height: 700px; border: 1px solid #eee">
       <el-aside width="400px" style="background-color: rgb(238, 241, 246)">
         <div class="sections">
           版块
@@ -24,7 +24,7 @@
         </div>
       </el-aside>
 
-      <el-container>
+      <el-container style="height: 700px; border: 1px solid #eee">
         <el-header style="font-size: 15px">
           <el-row>
             <el-col :span="6">
@@ -94,6 +94,19 @@
               </li>
             </ul>
           </div>
+                      <div class="page-bar">
+<ul>
+<li v-if="cur>1"><a v-on:click="lastpageClick()">上一页</a></li>
+<li v-if="cur==1"><a class="banclick">上一页</a></li>
+<li v-for="index in indexs" v-bind:key="index" v-bind:class="{ 'active': cur == index}" >
+<a v-on:click="btnClick(index)">{{ index }}</a>
+</li>
+<li v-if="cur!=all"><a v-on:click="nextpageClick()">下一页</a></li>
+<li v-if="cur == all"><a class="banclick">下一页</a></li>
+<li><a>共<i>{{all}}</i>页</a></li>
+</ul>
+</div>
+
         </el-main>
       </el-container>
     </el-container>
@@ -108,12 +121,16 @@ export default {
       sections: {},
       sectionName: "",
       sectionInfo: "",
+      index:1,
+      all: 10,//总页数
+      cur: 1, //当前页码
+      totalPage: 0, //当前条数
     };
   },
 
   beforeMount() {
     this.getSection();
-    this.getData();
+    this.getData(this.index);
   },
   mounted() {
     this.loginname = this.cookie.getCookie("LoginName");
@@ -147,18 +164,52 @@ export default {
       this.$router.replace("/login");
     },
 
-    getData() {
+    getData: function(index) {
       this.$http
-        .get("http://localhost/ci-test/public/index.php/Post/listPost", {})
+        .post("http://localhost/ci-test/public/index.php/Post/listPost", {
+         //params:{
+         page: index,
+         limit:'20',
+         state:0
+        // }
+        },
+        { emulateJSON: true })
         .then((response) => {
           let res = response.data;
           this.posts = res.data;
           if (res.status == "1") {
             this.posts = res.data;
-            console.log(this.posts);
+            this.dataList = [];
+            for(let i = 0;i<20;i++){
+              this.dataList.push(res.data[i])
+            }
+            this.all = res.totalPage;//总页数
+            console.log(this.all);
+            this.cur = res.pageNum;
+            this.totalPage = res.totalPage;
           }
         });
     },
+
+    //分页
+btnClick: function(data){//页码点击事件
+if(data != this.cur){
+this.cur = data
+}
+//根据点击页数请求数据
+this.getData(this.cur.toString());
+},
+
+nextpageClick: function(){
+  this.cur ++;
+//根据点击页数请求数据
+this.getData(this.cur.toString());
+},
+lastpageClick: function(){
+  this.cur --;
+//根据点击页数请求数据
+this.getData(this.cur.toString());
+},
 
     getSection() {
       this.$http
@@ -336,6 +387,37 @@ export default {
       });
     },
   },
+  computed: {
+    //分页
+indexs: function(){
+var left = 1;
+var right = this.all;
+var ar = [];
+if(this.all>= 5){
+if(this.cur > 3 && this.cur < this.all-2){
+left = this.cur - 2
+right = this.cur + 2
+}else{
+if(this.cur<=3){
+left = 1
+right = 5
+}else{
+right = this.all
+left = this.all -4
+}
+}
+}
+while (left <= right){
+ar.push(left)
+left ++
+}
+return ar
+},
+    defaultActive() {
+      console.log("/" + this.$route.path.split("/").reverse()[0]);
+      return "/" + this.$route.path.split("/").reverse()[0];
+    },
+  },
 };
 </script>
 
@@ -414,6 +496,52 @@ export default {
 .sections li el-button {
   display: inline-block;
   text-align: right;
+}
+
+.page-bar{
+margin:40px auto;
+margin-top: 20px;
+
+}
+ul,li{
+margin: 0px;
+padding: 0px;
+}
+li{
+list-style: none
+}
+.page-bar li:first-child>a {
+margin-left: 400px
+}
+.page-bar a{
+border: 1px solid #ddd;
+text-decoration: none;
+position: relative;
+float: left;
+padding: 6px 12px;
+margin-left: -1px;
+line-height: 1.42857143;
+color: #5D6062;
+cursor: pointer;
+margin-right: 20px;
+}
+.page-bar a:hover{
+background-color: #eee;
+}
+.page-bar a.banclick{
+cursor:not-allowed;
+}
+.page-bar .active a{
+color: #fff;
+cursor: default;
+background-color: #E96463;
+border-color: #E96463;
+}
+.page-bar i{
+font-style:normal;
+color: #d44950;
+margin: 0px 4px;
+font-size: 12px;
 }
 </style>
 

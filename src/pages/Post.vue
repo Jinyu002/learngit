@@ -14,7 +14,13 @@
         <div style="margin: 20px 0"></div>
         <div>发布时间： <span v-html="date"></span><br /></div>
         <div style="margin: 20px 0"></div>
+        <div class="content">
+        <el-container>
+          <main>
         <span v-html="content"></span>
+          </main>
+        </el-container>
+        </div>
         <div style="margin: 20px 0"></div>
         <div class="posts">
           <el-container v-for="reply in replies" :key="reply.id">
@@ -95,10 +101,13 @@ export default {
       this.date = routeDate;
       this.content = routeContent;
       this.id = routeId;
+      console.log(routeUsername);
     },
 
     edit() {
-      if (this.loginname != this.routeUsername) {
+      console.log(this.loginname);
+      console.log(this.author);
+      if (this.loginname != this.author) {
         this.$alert("非发帖人，无权限编辑", {
           confirmButtonText: "确定",
           callback: (action) => {
@@ -142,7 +151,7 @@ export default {
     },
 
     deletePost() {
-      if (this.loginname != this.routeUsername) {
+      if (this.loginname != this.author) {
         this.$alert("非发帖人，无权限删除", {
           confirmButtonText: "确定",
           callback: (action) => {
@@ -267,6 +276,20 @@ export default {
 </script>
 
 <style>
+.content {
+  background-color: white;
+  padding: 0.5rem;
+  margin: 0.5rem 3rem;
+}
+
+.content span{
+  display: inline-block;
+  text-align: center;
+  width: 1350px;
+  font-size: 20px;
+  /* margin: 0 10px; */
+
+}
 .posts {
   background-color: white;
   padding: 0.5rem;
